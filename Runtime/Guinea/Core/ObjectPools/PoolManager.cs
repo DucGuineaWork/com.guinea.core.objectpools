@@ -32,7 +32,7 @@ namespace Guinea.Core.ObjectPools
             public readonly Transform prefab;
             public readonly IObjectPool<Transform> pool;
 
-            public Pool(Transform prefab, PoolType poolType, int defaultCapacity=10, int maxSize=10000)
+            public Pool(Transform prefab, PoolType poolType, int defaultCapacity=10, int maxSize=10000, bool initializedDefault=false)
             {
                 this.prefab = prefab;
                 if(poolType == PoolType.Stack)
@@ -42,6 +42,15 @@ namespace Guinea.Core.ObjectPools
                 else
                 {
                     pool = new LinkedPool<Transform>(CreateFunc, null, true, maxSize);
+                }
+
+                if(initializedDefault)
+                {
+                    for(int i=0; i<defaultCapacity;i++)
+                    {
+                        Transform item = pool.Get();
+                        pool.Release(item);
+                    }
                 }
             }
 
