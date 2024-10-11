@@ -7,9 +7,9 @@ namespace Guinea.Core.ObjectPools
     public static class PoolManager
     {
         private static Dictionary<string, Pool> s_pools = new();
-        public static bool TryAdd(string key, Transform prefab, PoolType poolType, int defaultCapacity=10, int maxSize=10000)
+        public static bool TryAdd(string key, Transform prefab, PoolType poolType, int defaultCapacity=10, int maxSize=10000, bool initializedDefault=false)
         {
-            return s_pools.TryAdd(key, new Pool(prefab, poolType, defaultCapacity, maxSize));
+            return s_pools.TryAdd(key, new Pool(prefab, poolType, defaultCapacity, maxSize, initializedDefault));
         }
 
         public static bool Remove(string key)
