@@ -50,12 +50,19 @@ namespace Guinea.Core.ObjectPools
                     pool = new LinkedPool<Transform>(CreateFunc, null, true, maxSize);
                 }
 
+                List<Transform> items = new List<Transform>();
+
                 if(initializedDefault)
                 {
                     for(int i=0; i<defaultCapacity;i++)
                     {
                         Transform item = pool.Get();
-                        pool.Release(item);
+                        items.Add(item);
+                    }
+
+                    for(int i=0; i<items.Count;i++)
+                    {
+                        pool.Release(items[i]);
                     }
                 }
             }
