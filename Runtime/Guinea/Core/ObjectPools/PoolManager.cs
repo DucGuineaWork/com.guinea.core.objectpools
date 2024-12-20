@@ -67,7 +67,7 @@ namespace Guinea.Core.ObjectPools
 
                     for(int i=0; i<items.Count;i++)
                     {
-                        pool.Release(items[i]);
+                        items[i].gameObject.SetActive(false);
                     }
                 }
             }
@@ -80,7 +80,7 @@ namespace Guinea.Core.ObjectPools
                 {
                     poolTracker = instance.gameObject.AddComponent<PoolTracker>();
                 }
-                instance.gameObject.SetActive(false);
+                instance.gameObject.SetActive(true);
                 poolTracker.pool = pool;
                 return instance;
             }
