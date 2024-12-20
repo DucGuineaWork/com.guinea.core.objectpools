@@ -6,30 +6,25 @@ namespace Guinea.Core.ObjectPools
 {
     public static class PoolManager
     {
-        private static Dictionary<string, Pool> s_pools = new();
+        private static ConcurrentDictionary<string, Pool> s_pools = new();
         public static bool TryAdd(string key, Transform prefab, PoolType poolType, int defaultCapacity=10, int maxSize=10000, bool initializedDefault=false)
         {
             if (prefab == null)
             {
                 throw new ArgumentNullException(nameof(prefab), "Prefab cannot be null.");
             }
-            if(!s_pools.ContainsKey(key))          
-            {
-                Pool pool = new Pool(prefab, poolType, defaultCapacity, maxSize, initializedDefault);
-                s_pools.Add(key, pool);
-                return true;
-            }
-            return false;
+             var pool = new Pool(prefab, poolType, defaultCapacity, maxSize, initializedDefault);
+            return s_pools.TryAdd(key, pool);
         }
 
-        public static bool Remove(string key)
+        public static bool TryRemove(string key)
         {
-            if(s_pools.TryGetValue(key, out Pool pool))
+             if (s_pools.TryRemove(key, out Pool pool))
             {
                 pool.pool.Clear();
                 return true;
             }
-            return false;            
+            return false;     
         }
 
         public static Transform Get(string key)
