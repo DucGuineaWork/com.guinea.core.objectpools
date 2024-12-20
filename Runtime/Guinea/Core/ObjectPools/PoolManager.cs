@@ -9,6 +9,10 @@ namespace Guinea.Core.ObjectPools
         private static Dictionary<string, Pool> s_pools = new();
         public static bool TryAdd(string key, Transform prefab, PoolType poolType, int defaultCapacity=10, int maxSize=10000, bool initializedDefault=false)
         {
+            if (prefab == null)
+            {
+                throw new ArgumentNullException(nameof(prefab), "Prefab cannot be null.");
+            }
             if(!s_pools.ContainsKey(key))          
             {
                 Pool pool = new Pool(prefab, poolType, defaultCapacity, maxSize, initializedDefault);
@@ -30,7 +34,11 @@ namespace Guinea.Core.ObjectPools
 
         public static Transform Get(string key)
         {
-            return s_pools[key].pool.Get();
+            if (s_pools.TryGetValue(key, out Pool pool))
+            {
+                return pool.pool.Get();
+            }
+            throw new KeyNotFoundException($"The pool with key '{key}' does not exist.");
         }
 
         public class Pool
